@@ -1,0 +1,101 @@
+version: '3'
+
+networks:
+  wg_network:
+    driver: bridge
+    ipam:
+      driver: local
+      config:
+        - subnet: 172.28.0.0/16
+
+  monitoring: 
+    driver: bridge
+
+volumes:
+  prometheus_data: {}
+
+services:
+  wg_service_1:
+    image: wireguard_exporter
+    container_name: wireguard_exporter_1
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+    networks:
+      wg_network:
+        ipv4_address: 172.28.0.2
+      monitoring:
+    volumes:
+      - ./wg0_host_1.conf:/etc/wireguard/wg0.conf
+    command: sh -c "wg-quick up wg0 && ./main"
+    expose:
+      - 9011
+  
+  wg_service_2:
+    image: wireguard_exporter
+    container_name: wireguard_exporter_2
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+    networks:
+      wg_network:
+        ipv4_address: 172.28.0.3
+      monitoring:
+    volumes:
+      - ./wg0_host_2.conf:/etc/wireguard/wg0.conf
+    command: sh -c "wg-quick up wg0 && ./main"
+    expose:
+      - 9011
+    
+  wg_service_3:
+    image: wireguard_exporter
+    container_name: wireguard_exporter_3
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+    networks:
+      wg_network:
+        ipv4_address: 172.28.0.4
+    volumes:
+      - ./wg0_host_2.conf:/etc/wireguard/wg0.conf
+    command: sh -c "wg-quick up wg0 && ./main"
+    expose:
+      - 9011
+
+  node-exporter:
+    image: prom/node-exporter:latest
+    container_name: node-exporter
+    restart: unless-stopped
+    expose:
+      - 9011
+    networks:
+      - monitoring
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    restart: unless-stopped
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--web.enable-lifecycle'
+    expose:
+      - 9090
+    networks:
+      - monitoring
+
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./grafana-provisioning/datasources:/etc/grafana/provisioning/datasources
+      - ./grafana-provisioning/dashboards:/var/lib/grafana/dashboards
+    networks:
+      - monitoring
+
+
