@@ -4,7 +4,8 @@ WORKDIR /app
 
 COPY . .
 
-RUN go build -o main  -mod=vendor .
+RUN ls -lh
+RUN go build -ldflags "-linkmode external -extldflags '-static'" -o main  -mod=vendor ./cmd
 
 
 FROM ubuntu:23.04

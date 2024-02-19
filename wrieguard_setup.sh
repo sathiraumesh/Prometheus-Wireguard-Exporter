@@ -12,4 +12,5 @@ apt-get install -y curl
 
 cd /etc/wireguard && mkdir keys && cd keys
 
-wg genkey | tee privatekey | wg pubkey > publickey
+# generate random keys for conf
+# wg genkey | tee privatekey | wg pubkey > publickey

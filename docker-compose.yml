@@ -26,7 +26,7 @@ services:
         ipv4_address: 172.28.0.2
       monitoring:
     volumes:
-      - ./wg0_host_1.conf:/etc/wireguard/wg0.conf
+      - ./setup/wireguard/wg0_host_1.conf:/etc/wireguard/wg0.conf
     command: sh -c "wg-quick up wg0 && ./main"
     expose:
       - 9011
@@ -42,7 +42,7 @@ services:
         ipv4_address: 172.28.0.3
       monitoring:
     volumes:
-      - ./wg0_host_2.conf:/etc/wireguard/wg0.conf
+      - ./setup/wireguard/wg0_host_2.conf:/etc/wireguard/wg0.conf
     command: sh -c "wg-quick up wg0 && ./main"
     expose:
       - 9011
@@ -57,7 +57,7 @@ services:
       wg_network:
         ipv4_address: 172.28.0.4
     volumes:
-      - ./wg0_host_2.conf:/etc/wireguard/wg0.conf
+      - ./setup/wireguard/wg0_host_2.conf:/etc/wireguard/wg0.conf
     command: sh -c "wg-quick up wg0 && ./main"
     expose:
       - 9011
@@ -76,7 +76,7 @@ services:
     container_name: prometheus
     restart: unless-stopped
     volumes:
-      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./setup/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
       - '--storage.tsdb.path=/prometheus'
@@ -93,8 +93,8 @@ services:
     ports:
       - "3000:3000"
     volumes:
-      - ./grafana-provisioning/datasources:/etc/grafana/provisioning/datasources
-      - ./grafana-provisioning/dashboards:/var/lib/grafana/dashboards
+      - ./setup/grafana-provisioning/datasources:/etc/grafana/provisioning/datasources
+      - ./setup/grafana-provisioning/dashboards:/var/lib/grafana/dashboards
     networks:
       - monitoring
 

@@ -1,5 +1,0 @@
-1. create a small golang application to execute os command through http request
-2. deploy golang application run in docker conatiner
-3. install wirguard on docker conatiner
-4. create wg0 interface and up interface
-5
