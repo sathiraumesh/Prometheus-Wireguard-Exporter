@@ -5,6 +5,7 @@ WORKDIR /app
 COPY . .
 
 RUN ls -lh
+RUN go mod vendor
 RUN go build -ldflags "-linkmode external -extldflags '-static'" -o main  -mod=vendor ./cmd
 
 
