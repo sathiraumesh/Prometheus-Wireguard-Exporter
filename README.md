@@ -24,7 +24,7 @@ Currently, there are no binaries. To build from the source run the following com
 
 To build the static binary use the following command
 ```bash
-  make-static build
+  make static-build
 ```
 
 ## Run Locally
