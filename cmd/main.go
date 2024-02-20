@@ -92,15 +92,15 @@ func scrapeConnectionStats(client *wgctrl.Client, intfTM []string) {
 
 		for _, intf := range interfaces {
 
-			shouldMonitorInF := false
+			shouldMonitorInF := true
 
 			for _, intfToMonitor := range intfTM {
 				if intfToMonitor == intf.Name {
-					shouldMonitorInF = true
+					shouldMonitorInF = false
 				}
 			}
 
-			if shouldMonitorInF {
+			if !shouldMonitorInF {
 				continue
 			}
 
