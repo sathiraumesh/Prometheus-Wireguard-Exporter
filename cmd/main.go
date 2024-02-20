@@ -60,7 +60,7 @@ func main() {
 	flag.Parse()
 
 	port := ":" + strconv.Itoa(*portPtr)
-	fmt.Println(port)
+
 	interfaces := strings.Split(*itemsStr, ",")
 
 	client, err := wgctrl.New()
