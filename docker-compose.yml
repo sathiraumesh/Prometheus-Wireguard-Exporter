@@ -46,30 +46,6 @@ services:
     command: sh -c "wg-quick up wg0 && ./main"
     expose:
       - 9011
-    
-  wg_service_3:
-    image: wireguard_exporter
-    container_name: wireguard_exporter_3
-    cap_add:
-      - NET_ADMIN
-      - SYS_MODULE
-    networks:
-      wg_network:
-        ipv4_address: 172.28.0.4
-    volumes:
-      - ./setup/wireguard/wg0_host_2.conf:/etc/wireguard/wg0.conf
-    command: sh -c "wg-quick up wg0 && ./main"
-    expose:
-      - 9011
-
-  node-exporter:
-    image: prom/node-exporter:latest
-    container_name: node-exporter
-    restart: unless-stopped
-    expose:
-      - 9011
-    networks:
-      - monitoring
 
   prometheus:
     image: prom/prometheus:latest
