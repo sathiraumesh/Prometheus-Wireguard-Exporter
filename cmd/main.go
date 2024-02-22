@@ -59,9 +59,12 @@ func init() {
 func main() {
 	flag.Parse()
 
+	interfaces := []string{}
 	port := ":" + strconv.Itoa(*portPtr)
 
-	interfaces := strings.Split(*itemsStr, ",")
+	if strings.TrimSpace(*itemsStr) != "" {
+		interfaces = strings.Split(*itemsStr, ",")
+	}
 
 	client, err := wgctrl.New()
 	if err != nil {
@@ -83,7 +86,6 @@ func main() {
 func scrapeConnectionStats(client *wgctrl.Client, intfTM []string) {
 
 	for {
-
 		interfaces, err := client.Devices()
 
 		if err != nil {
@@ -92,16 +94,18 @@ func scrapeConnectionStats(client *wgctrl.Client, intfTM []string) {
 
 		for _, intf := range interfaces {
 
-			shouldMonitorInF := true
+			if len(intfTM) > 0 {
+				shouldMonitorInF := false
 
-			for _, intfToMonitor := range intfTM {
-				if intfToMonitor == intf.Name {
-					shouldMonitorInF = false
+				for _, intfToMonitor := range intfTM {
+					if intfToMonitor == intf.Name {
+						shouldMonitorInF = true
+					}
 				}
-			}
 
-			if !shouldMonitorInF {
-				continue
+				if !shouldMonitorInF {
+					continue
+				}
 			}
 
 			for _, peer := range intf.Peers {
