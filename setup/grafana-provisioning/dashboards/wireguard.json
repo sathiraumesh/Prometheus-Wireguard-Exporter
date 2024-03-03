@@ -119,7 +119,7 @@
           "useBackend": false
         }
       ],
-      "title": "wireguard_peer_connection_monitor",
+      "title": "Latest Handshake",
       "type": "timeseries"
     },
     {
@@ -188,7 +188,7 @@
         "x": 12,
         "y": 0
       },
-      "id": 3,
+      "id": 2,
       "options": {
         "legend": {
           "calcs": [],
@@ -208,8 +208,8 @@
             "uid": "PBFA97CFB590B2093"
           },
           "disableTextWrap": false,
-          "editorMode": "builder",
-          "expr": "wireguard_transmitted_bytes",
+          "editorMode": "code",
+          "expr": "wireguard_received_bytes",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "instant": false,
@@ -219,7 +219,7 @@
           "useBackend": false
         }
       ],
-      "title": "wireguard_peer_transmiited_bytes",
+      "title": "Data received",
       "type": "timeseries"
     },
     {
@@ -288,7 +288,7 @@
         "x": 0,
         "y": 8
       },
-      "id": 2,
+      "id": 3,
       "options": {
         "legend": {
           "calcs": [],
@@ -308,8 +308,8 @@
             "uid": "PBFA97CFB590B2093"
           },
           "disableTextWrap": false,
-          "editorMode": "builder",
-          "expr": "wireguard_received_bytes",
+          "editorMode": "code",
+          "expr": "wireguard_transmitted_bytes",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "instant": false,
@@ -319,7 +319,7 @@
           "useBackend": false
         }
       ],
-      "title": "wireguard_peer_received_bytes",
+      "title": "Data Transmitted",
       "type": "timeseries"
     }
   ],
@@ -330,13 +330,13 @@
     "list": []
   },
   "time": {
-    "from": "now-5m",
+    "from": "now-15m",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "",
-  "title": "Wireguard",
-  "uid": "f1aa6266-5cb3-4054-a468-86b00fe4432a",
+  "title": "Wiregaurd_Monitor",
+  "uid": "dd08060a-97bf-43af-8f5d-28f01dcdce71",
   "version": 5,
   "weekStart": ""
 }

@@ -1,4 +1,6 @@
-.PHONY: run build build-image
+.PHONY: all run build build-static build-image clean
+
+all: build
 
 run:
 	docker compose up
