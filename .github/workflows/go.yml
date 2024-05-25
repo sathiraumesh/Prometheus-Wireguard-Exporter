@@ -30,3 +30,7 @@ jobs:
       - name: Build and Test with Docker Compose
         run: |
           make test
+      - name: Print current directory
+        run: | 
+          pwd
+          ls -lh 
