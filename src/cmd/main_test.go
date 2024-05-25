@@ -72,5 +72,5 @@ func TestMetricsEndpoint(t *testing.T) {
 	}
 	responseText := string(body)
 
-	assert.Contains(t, responseText, `SS"`)
+	assert.Contains(t, responseText, `public_key="HYf+yNzgj3uhARFlNy3Pawuk/yLC+WYoY2qwjjlSxxI="`)
 }
