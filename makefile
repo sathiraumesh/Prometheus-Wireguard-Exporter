@@ -3,7 +3,7 @@
 all: build
 
 run:
-	docker build -f dockerfile -t wireguard_exporter_test .
+	docker build -f dockerfile -t wireguard_exporter .
 	docker compose -f docker-compose.yml up 
 
 test:
