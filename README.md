@@ -22,9 +22,9 @@ Currently, there are no binaries. To build from the source run the following com
   make
 ```
 
-To build the static binary use the following command
+## Test
 ```bash
-  make static-build
+  make test
 ```
 
 ## Run Locally
