@@ -31,11 +31,8 @@ To build the static binary use the following command
 This small setup was created to simulate and show the exporter in action. I have created an environment with multiple containers communicating via wireguard VPN. The setup includes Prometheus and Grafana configured to showcase the metrics. To start setup clone the project and go to the project directory
 
 
-Make sure docker, docker-compose, and make utility  is installed. Run the following command to create a setup 
+Make sure docker, docker-compose, and make utility is installed. Run the following command to create a setup 
 
-```bash
-  make build-image
-```
 
 Run the project in a local setup
 ```bash
@@ -45,6 +42,8 @@ Run the project in a local setup
 Monitor the metrics using Grafana Dashboard using the default password and username 
 ```admin, admin```
 
+Import the dashboard from path 
+```setup/grafana-provisioning```
 ```bash
 http://localhost:3000/dashboards
 ```

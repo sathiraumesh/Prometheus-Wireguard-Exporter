@@ -2,9 +2,8 @@ FROM golang:1.20 AS builder
 
 WORKDIR /app
 
-COPY . .
+COPY /src .
 
-RUN ls -lh
 RUN go mod vendor
 RUN go build -ldflags "-linkmode external -extldflags '-static'" -o main  -mod=vendor ./cmd
 
