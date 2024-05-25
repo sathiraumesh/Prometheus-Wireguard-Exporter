@@ -86,7 +86,7 @@ func ScrapConnectionStats(monitorKeys []string, scrapInterval time.Duration) {
 				).Set(float64(peer.ReceiveBytes))
 			}
 		}
-		time.Sleep(time.Second * 5)
+		time.Sleep(scrapInterval)
 	}
 }
 
