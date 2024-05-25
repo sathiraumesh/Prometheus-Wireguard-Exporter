@@ -3,7 +3,7 @@ name: CI
 on:
   push:
     branches:
-      - master
+      - '**'
   pull_request:
     branches:
       - master
@@ -26,11 +26,7 @@ jobs:
           
       - name: Checkout code
         uses: actions/checkout@v2
-      - name: Print current directory
-        run: | 
-          pwd
-          ls -lh 
-      - name: Build and Test with Docker Compose
+      - name: Run Tests
         run: |
           make test
     
