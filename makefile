@@ -9,8 +9,6 @@ run:
 test:
 	docker build -f dockerfile.test -t wireguard_exporter_test .
 	docker compose -f docker-compose-test.yml up 
-	docker compose -f docker-compose-test.yml down
-
 build:
 	go mod vendor
 	go build -o bin/wireguard_exporter -mod=vendor ./cmd/main.go
