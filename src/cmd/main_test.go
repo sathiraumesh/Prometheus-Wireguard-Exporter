@@ -72,5 +72,5 @@ func TestMetricsEndpoint(t *testing.T) {
 	}
 	responseText := string(body)
 
-	assert.Contains(t, responseText, `sss`)
+	assert.Contains(t, responseText, `SS"`)
 }
