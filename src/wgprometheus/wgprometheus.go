@@ -1,21 +1,15 @@
-package main
+package wgprometheus
 
 import (
-	"flag"
 	"fmt"
 	"log"
-	"net/http"
-	"strconv"
 	"strings"
 	"time"
 
 	"github.com/prometheus/client_golang/prometheus"
-	"github.com/prometheus/client_golang/prometheus/promhttp"
-
 	"golang.zx2c4.com/wireguard/wgctrl"
+	"golang.zx2c4.com/wireguard/wgctrl/wgtypes"
 )
-
-const SCRAP_INTERVAL = 5
 
 var (
 	wireguardLatestHandshake = prometheus.NewGaugeVec(
@@ -42,13 +36,12 @@ var (
 		[]string{"interface", "public_key", "allowed_ips"},
 	)
 
-	registry = prometheus.NewRegistry()
-
-	portPtr  = flag.Int("p", 9011, "the port to listen on")
-	itemsStr = flag.String("i", "", "comma-separated list of interfaces")
+	registry *prometheus.Registry
 )
 
 func init() {
+	registry = prometheus.NewRegistry()
+
 	registry.MustRegister(
 		wireguardLatestHandshake,
 		wireguardTransmit,
@@ -56,59 +49,24 @@ func init() {
 	)
 }
 
-func main() {
-	flag.Parse()
-
-	interfaces := []string{}
-	port := ":" + strconv.Itoa(*portPtr)
-
-	if strings.TrimSpace(*itemsStr) != "" {
-		interfaces = strings.Split(*itemsStr, ",")
-	}
-
-	client, err := wgctrl.New()
-	if err != nil {
-		log.Fatalf("Failed to create WireGuard client: %v\n", err)
-	}
-
-	defer client.Close()
-
-	go scrapeConnectionStats(client, interfaces)
-
-	http.Handle("/metrics", promhttp.HandlerFor(
-		registry,
-		promhttp.HandlerOpts{},
-	))
-
-	http.ListenAndServe(port, nil)
+func GetRegistry() *prometheus.Registry {
+	return registry
 }
 
-func scrapeConnectionStats(client *wgctrl.Client, intfTM []string) {
+func ScrapConnectionStats(monitorKeys []string, scrapInterval time.Duration) {
 
 	for {
-		interfaces, err := client.Devices()
+		intfs, err := getInterfaces()
 
 		if err != nil {
-			log.Fatalf("Failed to get interfaces %v", err)
+			log.Fatalf("failed to get interfaces from the device %v", err)
 		}
 
-		for _, intf := range interfaces {
+		monitorIntfs := monitorInfterface(monitorKeys, intfs)
 
-			if len(intfTM) > 0 {
-				shouldMonitorInF := false
-
-				for _, intfToMonitor := range intfTM {
-					if intfToMonitor == intf.Name {
-						shouldMonitorInF = true
-					}
-				}
-
-				if !shouldMonitorInF {
-					continue
-				}
-			}
-
+		for _, intf := range monitorIntfs {
 			for _, peer := range intf.Peers {
+
 				wireguardLatestHandshake.WithLabelValues(
 					intf.Name,
 					peer.PublicKey.String(),
@@ -128,7 +86,38 @@ func scrapeConnectionStats(client *wgctrl.Client, intfTM []string) {
 				).Set(float64(peer.ReceiveBytes))
 			}
 		}
-
-		time.Sleep(time.Second * time.Duration(SCRAP_INTERVAL))
+		time.Sleep(time.Second * 5)
 	}
+}
+
+func getInterfaces() (interfaces []*wgtypes.Device, err error) {
+	wgClient, err := wgctrl.New()
+	if err != nil {
+		return
+	}
+
+	defer wgClient.Close()
+
+	interfaces, err = wgClient.Devices()
+	return
+}
+
+func monitorInfterface(monitorKeys []string, allIntf []*wgtypes.Device) (monitor []*wgtypes.Device) {
+
+	if len(monitorKeys) == 0 {
+		monitor = allIntf
+		return
+	}
+
+	monitor = make([]*wgtypes.Device, 0)
+
+	for _, key := range monitorKeys {
+		for _, intf := range allIntf {
+			if strings.TrimSpace(key) == intf.Name {
+				monitor = append(monitor, intf)
+			}
+		}
+	}
+
+	return
 }

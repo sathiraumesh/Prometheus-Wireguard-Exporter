@@ -1,17 +1,19 @@
-.PHONY: all run build build-static build-image clean
+.PHONY: all run build test build-image clean
 
 all: build
 
 run:
-	docker compose up
+	docker build -f dockerfile -t wireguard_exporter .
+	docker compose -f docker-compose.yml up 
+
+test:
+	docker build -f dockerfile.test -t wireguard_exporter_test .
+	docker compose -f docker-compose-test.yml up 
+	docker compose -f docker-compose-test.yml down
 
 build:
 	go mod vendor
 	go build -o bin/wireguard_exporter -mod=vendor ./cmd/main.go
-
-build-static:
-	go mod vendor
-	go build -ldflags "-linkmode external -extldflags '-static'" -o wireguard_exporter  -mod=vendor ./cmd/main.go
 
 build-image:
 	docker build -t wireguard_exporter .
