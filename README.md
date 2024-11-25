@@ -5,11 +5,11 @@ A simple minimalistic wireguard connection stats exporter for Prometheus.
 ```wireguard_exporter -p 9011 -i=wg1,wg2,wg3```
 | Flag | Descriptions  |  Specs                    |
 | :-------- | :------- | :-------------------------------- |
-| `-p` | exporter listning port| No(monitors all if not specifed)|
-| `-i` | list of comma seperated interface names to monitor  | No(defaults to 9011)| 
+| `-p` | exporter listning port| No(defaults to 9011)|
+| `-i` | list of comma seperated interface names to monitor  | No(monitors all if not specifed)| 
 
 # Exported metrics
-- LatestHandshake 
+- Latest Handshake 
 - Bytes Received
 - Bytes Transmitted
 
@@ -28,10 +28,10 @@ Currently, there are no binaries. To build from the source run the following com
 ```
 
 ## Run Locally
-This small setup was created to simulate and show the exporter in action. I have created an environment with multiple containers communicating via wireguard VPN. The setup includes Prometheus and Grafana configured to showcase the metrics. To start setup clone the project and go to the project directory
+This small setup was created to simulate and show the exporter in action. I have created an environment with multiple containers communicating via wireguard VPN. The setup includes Prometheus and Grafana configured to showcase the metrics. To start setup clone the project and go to the project directory.
 
 
-Make sure docker, docker-compose, and make utility is installed. Run the following command to create a setup 
+Make sure docker, docker-compose, and make utility are installed. Run the following command to create a setup 
 
 
 Run the project in a local setup
