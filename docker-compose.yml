@@ -1,5 +1,3 @@
-version: '3'
-
 networks:
   wg_network:
     driver: bridge
@@ -7,8 +5,7 @@ networks:
       driver: default
       config:
         - subnet: 172.28.0.0/16
-
-  monitoring: 
+  monitoring:
     driver: bridge
 
 volumes:
@@ -16,6 +13,10 @@ volumes:
 
 services:
   wg_service_1:
+    profiles: ["run"]
+    build:
+      context: .
+      target: prod
     image: wireguard_exporter
     container_name: wireguard_exporter_1
     cap_add:
@@ -30,8 +31,12 @@ services:
     command: sh -c "wg-quick up wg0 && ./main"
     expose:
       - 9011
-  
+
   wg_service_2:
+    profiles: ["run"]
+    build:
+      context: .
+      target: prod
     image: wireguard_exporter
     container_name: wireguard_exporter_2
     cap_add:
@@ -46,8 +51,11 @@ services:
     command: sh -c "wg-quick up wg0 && ./main"
     expose:
       - 9011
+    depends_on:
+      - wg_service_1
 
   prometheus:
+    profiles: ["run"]
     image: prom/prometheus:latest
     container_name: prometheus
     restart: unless-stopped
@@ -65,12 +73,28 @@ services:
       - monitoring
 
   grafana:
+    profiles: ["run"]
     image: grafana/grafana:latest
     ports:
       - "3000:3000"
     volumes:
       - ./setup/grafana-provisioning/datasources:/etc/grafana/provisioning/datasources
+      - ./setup/grafana-provisioning/dashboards:/etc/grafana/provisioning/dashboards
     networks:
       - monitoring
 
+  test:
+    profiles: ["test"]
+    build:
+      context: .
+      target: test
+    container_name: wireguard_exporter_test
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+    volumes:
+      - ./setup/wireguard/wg0_host_2.conf:/etc/wireguard/wg0.conf
+    command: sh -c "wg-quick up wg0 && go test -tags integration ./... -v"
+    expose:
+      - 9011
 
