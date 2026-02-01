@@ -118,5 +118,6 @@ cmd/wireguard-exporter/   # Application entrypoint and CLI
 internal/wgprometheus/    # Prometheus collector implementation
 setup/                    # WireGuard configs, Prometheus, Grafana provisioning
 ```
-![Uploading Screenshot 2026-02-01 at 6.09.42 PM.png…]()
+
+<img width="2346" height="1167" alt="Screenshot 2026-02-01 at 6 09 42 PM" src="https://github.com/user-attachments/assets/25b3133e-9120-4412-b321-39d6920babf7" />
 
